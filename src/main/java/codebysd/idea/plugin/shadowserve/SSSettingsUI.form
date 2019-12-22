@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="codebysd.idea.plugin.shadowserve.SSSettingsUI">
+  <grid id="27dc6" binding="mRootPanel" layout-manager="GridLayoutManager" row-count="8" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="12">
+    <margin top="12" left="12" bottom="12" right="12"/>
+    <constraints>
+      <xy x="20" y="20" width="459" height="300"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="5dc15" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font style="1"/>
+          <text resource-bundle="strings/SSBundle" key="lbl_ui_settings"/>
+        </properties>
+      </component>
+      <component id="2f761" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <vspacer id="edc09">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="c869f" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <labelFor value="2ddb0"/>
+          <text resource-bundle="strings/SSBundle" key="lbl_local_port"/>
+        </properties>
+      </component>
+      <component id="2ddb0" class="javax.swing.JTextField" binding="mTextLocalPort">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="strings/SSBundle" key="ttp_local_port"/>
+        </properties>
+      </component>
+      <hspacer id="3717b">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="ab9ff" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <labelFor value="77769"/>
+          <text resource-bundle="strings/SSBundle" key="lbl_origin_web_url"/>
+        </properties>
+      </component>
+      <component id="77769" class="javax.swing.JTextField" binding="mTextWebURL">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="strings/SSBundle" key="ttp_web_url"/>
+        </properties>
+      </component>
+      <component id="3712" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <labelFor value="766b1"/>
+          <text resource-bundle="strings/SSBundle" key="lbl_shadow_path"/>
+        </properties>
+      </component>
+      <component id="766b1" class="javax.swing.JTextField" binding="mTextOverlayPath">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="strings/SSBundle" key="ttp_shadow_path"/>
+        </properties>
+      </component>
+      <component id="9b612" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <labelFor value="c3012"/>
+          <text resource-bundle="strings/SSBundle" key="lbl_local_root"/>
+        </properties>
+      </component>
+      <component id="c3012" class="javax.swing.JTextField" binding="mTextLocalRoot">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="strings/SSBundle" key="ttp_local_root"/>
+        </properties>
+      </component>
+      <component id="cb0b3" class="javax.swing.JButton" binding="mBtnBrowseLocalRoot">
+        <constraints>
+          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <horizontalAlignment value="0"/>
+          <text resource-bundle="strings/SSBundle" key="btn_browse"/>
+          <toolTipText resource-bundle="strings/SSBundle" key="ttp_browse"/>
+        </properties>
+      </component>
+      <component id="1ddd5" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="strings/SSBundle" key="lbl_caching"/>
+        </properties>
+      </component>
+      <component id="d0fe3" class="javax.swing.JCheckBox" binding="mChbCacheResponses">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="strings/SSBundle" key="lbl_cache_toggle"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

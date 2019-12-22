@@ -1,0 +1,21 @@
+<idea-plugin>
+    <!--  Plugin Details  -->
+    <id>codebysd.idea-plugin-shadowserve</id>
+    <name>Shadow Serve</name>
+    <version>1.0-SNAPSHOT</version>
+    <description>A dev server for serving local web files, shadowing resources from an existing web server.
+    </description>
+
+    <!-- Repository   -->
+    <vendor url="https://github.com/codebysd/idea-plugin-shadowserve">codebysd</vendor>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!--  Extension Points  -->
+    <extensions defaultExtensionNs="com.intellij">
+        <!--   Provides run configuration type    -->
+        <configurationType implementation="codebysd.idea.plugin.shadowserve.SSConfigurationType"/>
+    </extensions>
+
+</idea-plugin>
