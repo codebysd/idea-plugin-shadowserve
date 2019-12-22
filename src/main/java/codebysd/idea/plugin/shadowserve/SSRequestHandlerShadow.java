@@ -45,7 +45,7 @@ public class SSRequestHandlerShadow implements SSRequestHandler {
         }
 
         // locate file in sub path
-        final VirtualFile file = locateFile(path);
+        final VirtualFile file = locateFile(path.substring(mShadowPath.length()));
 
         // not file found
         if (file == null) {
