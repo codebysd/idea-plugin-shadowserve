@@ -49,26 +49,23 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            console.log(`Parsing ref:${context.payload.ref}`);
-            const m = context.payload.ref.match(/^refs\/tags\/(release-([Vv][\d\.]+(-snapshot)?))$/i) || [];
-            console.log(`Parsed Tag:${m[1]} and Release:${m[2]}`);
-            return { tag: m[1], release: m[2] };
+            return (context.payload.ref.match(/^refs\/tags\/(release-([Vv][\d\.]+(-snapshot)?))$/i) || [])[2];
 
       # Create a release on github if release tag present
       - name: Create a Release
         id: release
-        if: success() && steps.info.outputs.release
+        if: success() && steps.info.outputs.result != 'undefined'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.info.outputs.tag }}
-          release_name: ${{ steps.info.outputs.release }}
+          tag_name: ${{ steps.info.outputs.result }}
+          release_name: ${{ steps.info.outputs.result }}
 
       # Upload release zip to the created release
       - name: Upload artifacts
         id: upload
-        if: success() && steps.info.outputs.release
+        if: success() && steps.info.outputs.result != 'undefined'
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
