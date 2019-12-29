@@ -49,8 +49,9 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            var m = context.ref.match(/^refs\/tags\/(release-([Vv][\d\.]+))$/i) || [];
-            console.log(m);
+            console.log(`Parsing ref:{context.ref}`);
+            const m = context.ref.match(/^\/refs\/tags\/(release-([Vv][\d\.]+))$/i) || [];
+            console.log(`Parsed Tag:${m[1]} and Release:${m[2]}`);
             return { tag: m[1], release: m[2] };
 
       # Create a release on github if release tag present
