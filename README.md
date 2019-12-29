@@ -11,8 +11,8 @@ An IntellJ IDEA plugin to run a dev server for serving local web files, shadowin
 ### Use case
 
 This plugin makes it easier to edit and debug web resources from a web server, inside the IDE, while being able to 
-preview the results in a browser. It is easy and quick to overlay some local web files over a production server and 
-preview how the changes would look, as rest of the calls are forwarded production server.
+preview the results in a browser. It is easy and quick to overlay some local web files over a deployed server and 
+preview how the changes would look when deployed, as rest of the calls are forwarded to same web server.
 
 It does so by runs a local server that overlays (shadow) local files over some (or all) files coming from a source 
 web server.
