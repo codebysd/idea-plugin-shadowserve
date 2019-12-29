@@ -5,6 +5,9 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * Handles web requests to resource server.
@@ -22,6 +25,48 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
     public SSRequestHandlerWeb(URI webURI, SSUILogger uiLogger) {
         mWebURI = webURI;
         mUILogger = uiLogger;
+    }
+
+    /**
+     * Get host header for forwarded web request
+     *
+     * @return host header
+     */
+    private String getHostHeader() {
+        final String host = mWebURI.getHost();
+        final int port = mWebURI.getPort();
+        if (port == -1) {
+            return host;
+        } else {
+            return String.join(":", host, Integer.toString(port));
+        }
+    }
+
+    /**
+     * Copy HTTP request headers from source map to destination consumer.
+     * Nil keys and values are skipped.
+     *
+     * @param src  source header map
+     * @param dest destination consumer.
+     */
+    private void copyRequestHeaders(Map<String, List<String>> src, BiConsumer<String, String> dest) {
+        src.entrySet().stream()
+                .filter(e -> !SSUtils.isNil(e.getKey()))
+                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                .forEach(e -> dest.accept(e.getKey(), String.join(",", e.getValue())));
+    }
+
+    /**
+     * Copy HTTP response headers from source map to destination consumer.
+     *
+     * @param src  source header map
+     * @param dest destination consumer.
+     */
+    private void copyResponseHeaders(Map<String, List<String>> src, BiConsumer<String, List<String>> dest) {
+        src.entrySet().stream()
+                .filter(e -> !SSUtils.isNil(e.getKey()))
+                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                .forEach(e -> dest.accept(e.getKey(), e.getValue()));
     }
 
     /**
@@ -46,12 +91,15 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
         final HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
 
         try {
+            // Do not follow redirects, return 302 responses as well.
+            connection.setInstanceFollowRedirects(false);
+
             // set request method and headers
             connection.setRequestMethod(exchange.getRequestMethod());
-            exchange.getRequestHeaders().forEach((k, vs) -> connection.setRequestProperty(k, String.join(",", vs)));
+            copyRequestHeaders(exchange.getRequestHeaders(), connection::setRequestProperty);
 
             // override host
-            connection.setRequestProperty("host", mWebURI.getHost());
+            connection.setRequestProperty("Host", getHostHeader());
 
             // write request body if any
             if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -63,12 +111,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
             int code = connection.getResponseCode();
 
             // copy headers
-            connection.getHeaderFields().forEach((k, vs) -> {
-                // raw connection headers may have null keys
-                if (k != null && vs != null && !vs.isEmpty()) {
-                    exchange.getResponseHeaders().put(k, vs);
-                }
-            });
+            copyResponseHeaders(connection.getHeaderFields(), exchange.getResponseHeaders()::put);
 
             // write response body
             exchange.sendResponseHeaders(code, connection.getContentLengthLong());

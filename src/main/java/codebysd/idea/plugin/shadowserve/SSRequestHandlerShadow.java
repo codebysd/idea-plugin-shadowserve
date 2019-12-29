@@ -44,8 +44,11 @@ public class SSRequestHandlerShadow implements SSRequestHandler {
             return false;
         }
 
+        // sub path
+        final String subPath = path.substring(mShadowPath.length());
+
         // locate file in sub path
-        final VirtualFile file = locateFile(path.substring(mShadowPath.length()));
+        final VirtualFile file = locateFile(subPath);
 
         // not file found
         if (file == null) {
