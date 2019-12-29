@@ -31,15 +31,15 @@ jobs:
             ${{ runner.os }}-gradle-
 
       # Run gradle build tasks
-      - name: Build with Gradle
-        id: build
-        run: ./gradlew build
-
-      # Bundle artifacts into a release zip file
-      - name: Zip Artifacts
-        id: zip
-        if: success()
-        run: zip -rj ./build/release.zip ./build/distributions
+      #      - name: Build with Gradle
+      #        id: build
+      #        run: ./gradlew build
+      #
+      #      # Bundle artifacts into a release zip file
+      #      - name: Zip Artifacts
+      #        id: zip
+      #        if: success()
+      #        run: zip -rj ./build/release.zip ./build/distributions
 
       # Collect tag and release info if present
       - name: Parse Git Info
@@ -49,7 +49,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            console.log(`Parsing ref:{context.payload.ref}`);
+            console.log(`Parsing ref:${context.payload.ref}`);
             const m = context.payload.ref.match(/^\/refs\/tags\/(release-([Vv][\d\.]+))$/i) || [];
             console.log(`Parsed Tag:${m[1]} and Release:${m[2]}`);
             return { tag: m[1], release: m[2] };
