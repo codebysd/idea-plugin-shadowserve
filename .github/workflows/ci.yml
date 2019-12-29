@@ -47,6 +47,7 @@ jobs:
         if: success()
         uses: actions/github-script@0.3.0
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             var m = context.ref.match(/^refs\/tags\/(release-([Vv][\d\.]+))$/i) || [];
             console.log(m);
