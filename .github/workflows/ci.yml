@@ -50,7 +50,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             console.log(`Parsing ref:${context.payload.ref}`);
-            const m = context.payload.ref.match(/^\/refs\/tags\/(release-([Vv][\d\.]+))$/i) || [];
+            const m = context.payload.ref.match(/^refs\/tags\/(release-([Vv][\d\.]+(-snapshot)?))$/i) || [];
             console.log(`Parsed Tag:${m[1]} and Release:${m[2]}`);
             return { tag: m[1], release: m[2] };
 
