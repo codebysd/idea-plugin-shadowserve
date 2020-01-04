@@ -1,11 +1,9 @@
 # Workflow name
 name: Release
 
-# Event triggers (only on v* tags in master branch)
+# Event triggers (only on v* tags )
 on:
   push:
-    branches:
-      - master
     tags:
       - v*
 # Jobs
