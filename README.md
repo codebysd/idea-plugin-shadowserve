@@ -2,6 +2,7 @@
 
 An IntellJ IDEA plugin to run a dev server for serving local web files, shadowing resources from an existing web server.
 
+![release-status](https://github.com/codebysd/idea-plugin-shadowserve/workflows/Release/badge.svg)
 
 ### Requirements
 
@@ -26,11 +27,11 @@ server.
 
 The plugin adds a run configuration of type `Shadow Serve`. The configuration options are as follows:
 
-1. `Local Server Port` : The local port on which shadow server will run.
-2. `Origin Web URL` : The URL of remote or local server that serves all other files not replaced by local files.
-3. `Shadow Path` : The path on origin web server, that is to be shadowed. All requests starting with this path, will
+1. `Local Server Port` - The local port on which shadow server will run.
+2. `Origin Web URL` - The URL of remote or local server that serves all other files not replaced by local files.
+3. `Shadow Path` - The path on origin web server, that is to be shadowed. All requests starting with this path, will
    cause files to be looked up from local project.
-4. `Local Root Directory` : The parent directory under which shadowed files will be searched.
+4. `Local Root Directory` - The parent directory under which shadowed files will be searched.
 
 After starting the run configuration, open browser at `http://localhost:<local-port>` to preview web results.
 

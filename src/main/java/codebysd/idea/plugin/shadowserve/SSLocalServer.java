@@ -68,7 +68,7 @@ public class SSLocalServer extends ProcessHandler {
      */
     public String getAddress() {
         if (mServer != null) {
-            return String.format("http://%s", mServer.getAddress().toString());
+            return String.format("http:/%s", mServer.getAddress().toString());
         } else {
             return null;
         }

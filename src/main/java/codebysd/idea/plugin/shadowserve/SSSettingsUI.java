@@ -35,6 +35,9 @@ public class SSSettingsUI {
 
         // handle browse button click
         mBtnBrowseLocalRoot.addActionListener(e -> this.onBtnBrowseClick());
+
+        //TODO - decide on caching support, hiding settings checkbox for now
+        mChbCacheResponses.setVisible(false);
     }
 
     /**

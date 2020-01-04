@@ -4,12 +4,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.sun.net.httpserver.HttpExchange;
 import org.jetbrains.annotations.Nullable;
 
+import javax.activation.FileTypeMap;
+import javax.activation.MimetypesFileTypeMap;
 import java.io.InputStream;
 
 /**
  * Handle requests for the shadowed path, using files under local root directory.
  */
 public class SSRequestHandlerShadow implements SSRequestHandler {
+    private final FileTypeMap mFileTypeMap;
     private final String mShadowPath;
     private final VirtualFile mLocalRoot;
     private final String mIndexFileName;
@@ -28,6 +31,7 @@ public class SSRequestHandlerShadow implements SSRequestHandler {
         mLocalRoot = localRoot;
         mIndexFileName = indexFileName;
         mUILogger = uiLogger;
+        mFileTypeMap = MimetypesFileTypeMap.getDefaultFileTypeMap();
     }
 
     /**
@@ -59,7 +63,7 @@ public class SSRequestHandlerShadow implements SSRequestHandler {
         mUILogger.logStdOut("Shadowing\t%s\t->\t%s", exchange.getRequestURI().getPath(), file.getCanonicalPath());
 
         // add file specific headers
-        exchange.getResponseHeaders().add("Content-Type", file.getFileType().getName());
+        exchange.getResponseHeaders().add("Content-Type", mFileTypeMap.getContentType(file.getName()));
         exchange.getResponseHeaders().add("Content-Length", Long.toString(file.getLength()));
 
         // signal browsers not to cache shadowed resources
