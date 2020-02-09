@@ -8,6 +8,9 @@ An IntellJ IDEA plugin to run a dev server for serving local web files, shadowin
 
 1. IntelliJ IDEA 2019.3 (or latest) IDE, running on Java 11 (or latest) runtime.
 
+### Download
+
+Install from tha zip package in [the latest release](https://github.com/codebysd/idea-plugin-shadowserve/releases/latest).
 
 ### Use case
 
