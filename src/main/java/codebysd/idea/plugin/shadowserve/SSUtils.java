@@ -2,12 +2,16 @@ package codebysd.idea.plugin.shadowserve;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -49,12 +53,16 @@ public class SSUtils {
      * @param uri    Original URI
      * @param editor Editor function.
      * @return Edited URI.
-     * @throws URISyntaxException URI building exception.
+     * @throws IOException URI building exception.
      */
-    public static URI editURI(URI uri, Consumer<URIBuilder> editor) throws URISyntaxException {
+    public static URI editURI(URI uri, Consumer<URIBuilder> editor) throws IOException {
         final URIBuilder builder = new URIBuilder(uri);
         editor.accept(builder);
-        return builder.build();
+        try {
+            return builder.build();
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
@@ -62,20 +70,59 @@ public class SSUtils {
      *
      * @param from Source stream
      * @param to   Target stream
-     * @throws IOException          Read/Write error
-     * @throws InterruptedException If thread interrupted during copy
+     * @throws IOException Read/Write error
      */
-    public static void IOCopy(InputStream from, OutputStream to) throws IOException, InterruptedException {
+    public static void IOCopy(InputStream from, OutputStream to) throws IOException {
         int len;
         byte[] buff = new byte[4096];
         do {
             if (Thread.interrupted()) {
-                throw new InterruptedException("Thread interrupted");
+                throw new IOException("Thread interrupted");
             }
             len = from.read(buff);
             if (len > 0) {
                 to.write(buff, 0, len);
             }
         } while (len > 0);
+    }
+
+    /**
+     * Get contents of given input stream as a string
+     *
+     * @param stream Input stream
+     * @return String
+     * @throws IOException Read/Write error
+     */
+    public static String readString(InputStream stream) throws IOException {
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        IOCopy(stream, bos);
+        return bos.toString();
+    }
+
+    /**
+     * Copy HTTP request headers from source map to destination consumer.
+     * Nil keys and values are skipped.
+     *
+     * @param src  source header map
+     * @param dest destination consumer.
+     */
+    public static void copyRequestHeaders(Map<String, List<String>> src, BiConsumer<String, String> dest) {
+        src.entrySet().stream()
+                .filter(e -> !SSUtils.isNil(e.getKey()))
+                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                .forEach(e -> dest.accept(e.getKey(), String.join(",", e.getValue())));
+    }
+
+    /**
+     * Copy HTTP response headers from source map to destination consumer.
+     *
+     * @param src  source header map
+     * @param dest destination consumer.
+     */
+    public static void copyResponseHeaders(Map<String, List<String>> src, BiConsumer<String, List<String>> dest) {
+        src.entrySet().stream()
+                .filter(e -> !SSUtils.isNil(e.getKey()))
+                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                .forEach(e -> dest.accept(e.getKey(), e.getValue()));
     }
 }

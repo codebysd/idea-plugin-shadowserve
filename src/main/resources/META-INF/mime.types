@@ -9,4 +9,6 @@ image/bmp bmp BMP
 image/x-icon ico ICO cur CUR
 image/svg+xml svg SVG
 image/tiff tiff TIFF
-image/webp webp WEBP
+image/webp webp
+application/json json JSON
+application/xml xml XML

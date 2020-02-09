@@ -46,6 +46,7 @@ public final class SSBundle {
      * @param args template arguments.
      * @return String message
      */
+    @SuppressWarnings("unused")
     public static String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, @NotNull Object... args) {
         return CommonBundle.message(getBundle(), key, args);
     }

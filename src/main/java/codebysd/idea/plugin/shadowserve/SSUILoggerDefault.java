@@ -32,7 +32,7 @@ public class SSUILoggerDefault implements SSUILogger {
      * {@inheritDoc}
      */
     @Override
-    public void logStartup(String msg, Object... args) {
+    public void logSystem(String msg, Object... args) {
         mConsole.append(formatSafe(msg, args) + System.lineSeparator(), false);
     }
 

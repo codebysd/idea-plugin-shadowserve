@@ -1,6 +1,8 @@
 package codebysd.idea.plugin.shadowserve;
 
 import com.intellij.execution.process.ProcessHandler;
+import com.sun.net.httpserver.Filter;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.spi.HttpServerProvider;
@@ -10,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,6 +24,7 @@ public class SSLocalServer extends ProcessHandler {
     private static final int NUM_THREADS = 5;
     private final String mHost;
     private final int mPort;
+    private final List<Filter> mFilters;
     private final HttpHandler mHandler;
     private final AtomicBoolean mStarted;
     private HttpServer mServer;
@@ -31,11 +35,13 @@ public class SSLocalServer extends ProcessHandler {
      *
      * @param host    Hostname to bind to
      * @param port    Port to listen on.
+     * @param filters Request filters.
      * @param handler Request handler.
      */
-    public SSLocalServer(String host, int port, HttpHandler handler) {
+    public SSLocalServer(String host, int port, List<Filter> filters, HttpHandler handler) {
         mHost = host;
         mPort = port;
+        mFilters = filters;
         mHandler = handler;
         mStarted = new AtomicBoolean();
     }
@@ -52,8 +58,11 @@ public class SSLocalServer extends ProcessHandler {
             final InetSocketAddress address = new InetSocketAddress(mHost, mPort);
             mServer = HttpServerProvider.provider().createHttpServer(address, 0);
 
-            // set context, executor and start
-            mServer.createContext("/", mHandler);
+            // init context, set handler and filters
+            final HttpContext context = mServer.createContext("/", mHandler);
+            context.getFilters().addAll(mFilters);
+
+            // set executor and start
             mExecutor = Executors.newWorkStealingPool(NUM_THREADS);
             mServer.setExecutor(mExecutor);
             mServer.start();

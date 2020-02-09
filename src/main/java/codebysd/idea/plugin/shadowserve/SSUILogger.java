@@ -33,12 +33,12 @@ public interface SSUILogger {
     ExecutionConsole getExecutionConsole();
 
     /**
-     * Log a startup message.
+     * Log a system level message.
      *
      * @param msg  message
      * @param args format arguments.
      */
-    void logStartup(String msg, Object... args);
+    void logSystem(String msg, Object... args);
 
     /**
      * Log a standard output message.

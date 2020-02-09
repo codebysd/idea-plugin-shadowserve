@@ -1,18 +1,17 @@
 package codebysd.idea.plugin.shadowserve;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * Handles web requests to resource server.
  */
-public class SSRequestHandlerWeb implements SSRequestHandler {
+public class SSWebHandler implements HttpHandler {
     private final URI mWebURI;
     private final SSUILogger mUILogger;
 
@@ -22,7 +21,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
      * @param webURI   Resource server URI
      * @param uiLogger UI logger.
      */
-    public SSRequestHandlerWeb(URI webURI, SSUILogger uiLogger) {
+    public SSWebHandler(URI webURI, SSUILogger uiLogger) {
         mWebURI = webURI;
         mUILogger = uiLogger;
     }
@@ -42,32 +41,6 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
         }
     }
 
-    /**
-     * Copy HTTP request headers from source map to destination consumer.
-     * Nil keys and values are skipped.
-     *
-     * @param src  source header map
-     * @param dest destination consumer.
-     */
-    private void copyRequestHeaders(Map<String, List<String>> src, BiConsumer<String, String> dest) {
-        src.entrySet().stream()
-                .filter(e -> !SSUtils.isNil(e.getKey()))
-                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
-                .forEach(e -> dest.accept(e.getKey(), String.join(",", e.getValue())));
-    }
-
-    /**
-     * Copy HTTP response headers from source map to destination consumer.
-     *
-     * @param src  source header map
-     * @param dest destination consumer.
-     */
-    private void copyResponseHeaders(Map<String, List<String>> src, BiConsumer<String, List<String>> dest) {
-        src.entrySet().stream()
-                .filter(e -> !SSUtils.isNil(e.getKey()))
-                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
-                .forEach(e -> dest.accept(e.getKey(), e.getValue()));
-    }
 
     /**
      * {@inheritDoc}
@@ -75,7 +48,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
      * This implementation proxies requests to resource server.
      */
     @Override
-    public boolean handle(HttpExchange exchange) throws Exception {
+    public void handle(HttpExchange exchange) throws IOException {
         // modify request URI
         final URI uri = SSUtils.editURI(exchange.getRequestURI(), ub -> {
             ub.setScheme(mWebURI.getScheme());
@@ -85,7 +58,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
         });
 
         // log
-        mUILogger.logStdOut("Forwarding\t%s\t->\t%s", exchange.getRequestURI().getPath(), uri.toString());
+        mUILogger.logStdOut("Forwarding\t%s\t⟶\t%s", exchange.getRequestURI().getPath(), uri.toString());
 
         // Create an HTTP connection
         final HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -96,7 +69,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
 
             // set request method and headers
             connection.setRequestMethod(exchange.getRequestMethod());
-            copyRequestHeaders(exchange.getRequestHeaders(), connection::setRequestProperty);
+            SSUtils.copyRequestHeaders(exchange.getRequestHeaders(), connection::setRequestProperty);
 
             // override host
             connection.setRequestProperty("Host", getHostHeader());
@@ -111,7 +84,7 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
             int code = connection.getResponseCode();
 
             // copy headers
-            copyResponseHeaders(connection.getHeaderFields(), exchange.getResponseHeaders()::put);
+            SSUtils.copyResponseHeaders(connection.getHeaderFields(), exchange.getResponseHeaders()::put);
 
             // write response body
             exchange.sendResponseHeaders(code, connection.getContentLengthLong());
@@ -131,7 +104,5 @@ public class SSRequestHandlerWeb implements SSRequestHandler {
             exchange.close();
             connection.disconnect();
         }
-
-        return true;
     }
 }

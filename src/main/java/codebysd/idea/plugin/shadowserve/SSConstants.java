@@ -89,6 +89,11 @@ public interface SSConstants {
         boolean CACHE_RESPONSES = false;
 
         /**
+         * Default cache size (100Mb)
+         */
+        long CACHE_SIZE = 100 * 1024 * 1024;
+
+        /**
          * Default index file for serving directory.
          */
         String INDEX_FILE = "index.html";
